@@ -1,7 +1,7 @@
 // create variable to hold db connection
 let db;
 // establish a connection to IndexedDB database called 'budget_tracker' and set it to version 1
-const request = indexedDB.open('budget_tracker', 1);
+const request = indexedDB.open('new_budget', 1);
 // this event will emit if the database version changes (nonexistant to version 1, v1 to v2, etc.)
 request.onupgradeneeded = function(event) {
     // save a reference to the database 
@@ -25,18 +25,8 @@ request.onsuccess = function(event) {
     // log error here
     console.log(event.target.errorCode);
   };
-  // This function will be executed if we attempt to submit a new item and there's no internet connection
-function saveRecord(record) {
-    // open a new transaction with the database with read and write permissions 
-    const transaction = db.transaction(['new_budget'], 'readwrite');
   
-    // access the object store for `new_budget`
-    const budgetObjectStore = transaction.objectStore('new_budget');
-  
-    // add record to your store with add method
-    budgetObjectStore.add(record);
-  }
-  
+
   function uploadBudget() {
     // open a transaction on your db
     const transaction = db.transaction(['new_budget'], 'readwrite');
@@ -48,7 +38,7 @@ function saveRecord(record) {
     const getAll = budgetObjectStore.getAll();
 
   // upon a successful .getAll() execution, run this function
-getAll.onsuccess = function() {
+getAll.onsuccess = () => {
     // if there was data in indexedDb's store, let's send it to the api server
     if (getAll.result.length > 0) {
       fetch('/api/transaction/bulk', {
@@ -60,7 +50,7 @@ getAll.onsuccess = function() {
         }
       })
         .then(response => response.json())
-        .then(serverResponse => {
+        .then((serverResponse) => {
           if (serverResponse.message) {
             throw new Error(serverResponse);
           }
@@ -80,5 +70,16 @@ getAll.onsuccess = function() {
   };
     // more to come...
   }
+  // This function will be executed if we attempt to submit a new item and there's no internet connection
+function saveRecord(record) {
+  // open a new transaction with the database with read and write permissions 
+  const transaction = db.transaction(['new_budget'], 'readwrite');
+
+  // access the object store for `new_budget`
+  const budgetObjectStore = transaction.objectStore('new_budget');
+
+  // add record to your store with add method
+  budgetObjectStore.add(record);
+}
   // listen for app coming back online
 window.addEventListener('online', uploadBudget);
