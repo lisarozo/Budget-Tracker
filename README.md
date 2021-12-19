@@ -1,4 +1,7 @@
 # Budget-Tracker 
+
+This Website is a budget tracker for me to track my withdrawals and deposits with or without a data or internet connection so that my account balance is accurate when I am traveling
+
 Here is a screenshot to the deployed Heroku online functionality:
 ![Screenshot Deployed Heroku Online 2021-12-18 131624](https://user-images.githubusercontent.com/88279346/146653946-00c2d8cd-d7d8-449d-8048-03fdcc905eac.png)
 
